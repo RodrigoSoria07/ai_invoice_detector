@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.claude/
+
+# Build-only tool (2.4 MB Babel; app.js is committed precompiled)
+web/buildtools/
+
+# Env / secrets — never commit real keys
+.env
+*.local
+
+# OS
+.DS_Store
+Thumbs.db

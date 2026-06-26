@@ -1,0 +1,32 @@
+nvoice
+Invoice number L68T9EET-0004
+Date of issue March 11, 2026
+Date due March 11, 2026
+Anthropic, PBC
+548 Market Street
+PMB 90375
+San Francisco, California 94104
+United States
+support@anthropic.com
+Bill to
+Example Customer LLC
+123 Example Street
+10001 Example City
+Country
+billing@example.com
+$88.91 USD due March 11, 2026
+Pay online
+While we prefer electronic payment methods,
+any checks must be sent to the address below, NOT to our San Francisco office.
+----------------------------
+PAYMENT ADDRESS:
+Anthropic, PBC
+P.O. Box 104477
+Pasadena, CA 91189-4477
+Description Qty Unit price Amount
+Remaining time on Team plan - Premium after 11 Mar 2026
+Mar 11–Apr 2, 2026
+1 $88.91
+Subtotal $88.91
+Total $88.91
+Amount due $88.91 USD
