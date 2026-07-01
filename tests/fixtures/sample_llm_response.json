@@ -1,0 +1,21 @@
+{
+  "vendor": "Acme Corp",
+  "invoice_number": "INV-2026-001",
+  "date": "2026-06-01",
+  "currency": "USD",
+  "total": "1300.00",
+  "line_items": [
+    {
+      "description": "Consulting services",
+      "quantity": "10",
+      "unit_price": "100.00",
+      "amount": "1000.00"
+    },
+    {
+      "description": "Managed hosting",
+      "quantity": "1",
+      "unit_price": "300.00",
+      "amount": "300.00"
+    }
+  ]
+}

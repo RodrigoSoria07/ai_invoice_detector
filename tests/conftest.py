@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from invoice_extractor.llm import LLMClient
 from invoice_extractor.text_extraction import TextExtractor
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -26,9 +27,38 @@ class FakeTextExtractor:
         return self.text
 
 
+class FakeLLMClient:
+    """An :class:`LLMClient` that returns a fixed, canned completion.
+
+    Records each prompt so tests can assert the text was routed through it — no
+    network, no API key, no token cost.
+    """
+
+    def __init__(self, response: str) -> None:
+        self.response = response
+        self.prompts: list[str] = []
+
+    def complete(self, *, prompt: str) -> str:
+        self.prompts.append(prompt)
+        return self.response
+
+
 @pytest.fixture
 def sample_text() -> str:
     return (FIXTURES / "sample_invoice_text.txt").read_text(encoding="utf-8")
+
+
+@pytest.fixture
+def llm_response_json() -> str:
+    """A well-formed JSON invoice, as an LLM would return it."""
+    return (FIXTURES / "sample_llm_response.json").read_text(encoding="utf-8")
+
+
+@pytest.fixture
+def fake_llm(llm_response_json: str) -> FakeLLMClient:
+    client = FakeLLMClient(llm_response_json)
+    assert isinstance(client, LLMClient)  # honors the Protocol (R3)
+    return client
 
 
 @pytest.fixture

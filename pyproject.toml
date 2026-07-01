@@ -21,6 +21,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.6"]
 web = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "python-multipart>=0.0.9"]
+llm = ["anthropic>=0.40"]
 
 [project.scripts]
 extract-invoice = "invoice_extractor.cli:main"
@@ -39,3 +40,8 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# The demo generator embeds verbatim terminal output; those display lines are
+# intentionally wide for fidelity to a real run.
+"docs/make_demo_gif.py" = ["E501"]

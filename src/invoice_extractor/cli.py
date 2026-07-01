@@ -1,4 +1,4 @@
-"""Command-line interface (R5): ``extract-invoice <file> [--json]``."""
+"""Command-line interface (R5): ``extract-invoice <file> [--json] [--llm]``."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from collections.abc import Sequence
 
 from .errors import InvoiceExtractorError
 from .extractor import extract_invoice
+from .llm import AnthropicClient, LLMClient
 from .models import Invoice
 from .text_extraction import TextExtractor
 
@@ -23,6 +24,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--json",
         action="store_true",
         help="Print the result as JSON instead of a human-readable table.",
+    )
+    parser.add_argument(
+        "--llm",
+        action="store_true",
+        help="Parse with an LLM (Anthropic Claude) instead of the offline "
+        "rule-based parser. Requires ANTHROPIC_API_KEY.",
     )
     return parser
 
@@ -47,12 +54,20 @@ def _render_json(invoice: Invoice) -> str:
     return json.dumps(invoice.model_dump(mode="json"), indent=2)
 
 
-def main(argv: Sequence[str] | None = None, extractor: TextExtractor | None = None) -> int:
-    """Entry point. ``extractor`` is injectable so tests avoid real files/Tesseract."""
+def main(
+    argv: Sequence[str] | None = None,
+    extractor: TextExtractor | None = None,
+    llm: LLMClient | None = None,
+) -> int:
+    """Entry point. ``extractor`` and ``llm`` are injectable so tests avoid real
+    files/Tesseract and real API calls."""
     args = _build_parser().parse_args(argv)
 
+    if llm is None and args.llm:
+        llm = AnthropicClient()
+
     try:
-        invoice = extract_invoice(args.file, extractor)
+        invoice = extract_invoice(args.file, extractor, llm)
     except (FileNotFoundError, InvoiceExtractorError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1

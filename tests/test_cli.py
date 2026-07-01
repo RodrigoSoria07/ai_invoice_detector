@@ -7,7 +7,7 @@ from pathlib import Path
 
 from invoice_extractor.cli import main
 
-from .conftest import FakeTextExtractor
+from .conftest import FakeLLMClient, FakeTextExtractor
 
 
 def test_cli_outputs_json_flag(
@@ -30,6 +30,19 @@ def test_cli_table_output(sample_pdf: Path, fake_extractor: FakeTextExtractor, c
     out = capsys.readouterr().out
     assert "Acme Corp" in out
     assert "INV-2026-001" in out
+
+
+def test_cli_llm_flag_uses_injected_client(
+    sample_pdf: Path, fake_extractor: FakeTextExtractor, fake_llm: FakeLLMClient, capsys
+) -> None:
+    exit_code = main(
+        [str(sample_pdf), "--json", "--llm"], extractor=fake_extractor, llm=fake_llm
+    )
+
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["vendor"] == "Acme Corp"
+    assert len(fake_llm.prompts) == 1  # the LLM path was taken
 
 
 def test_cli_reports_error_for_missing_file(
